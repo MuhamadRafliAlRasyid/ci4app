@@ -16,8 +16,10 @@
                             <p class="card-text"><b>Penulis : </b> <?= $komik['penulis']; ?></p>
                             <p class="card-text"><small class="text-muted">Penerbit : <?= $komik['penerbit']; ?></small></p>
 
-                            <a href="" class="btn btn-warning">Edit</a>
-                            <a href="" class="btn btn-danger">Delete</a>
+                            <a href="/komik/edit/<?= $komik['slug']; ?>" class="btn btn-warning">Edit</a>
+                            <form action="<?= base_url('/komik/delete/' . $komik['id']) ?>" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
+                            </form>
                             <br><br>
                             <a href="/komik">Kembali ke daftar Komik </a>
                         </div>

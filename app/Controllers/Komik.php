@@ -92,4 +92,58 @@ class Komik extends BaseController
         session()->setFlashdata('pesan', 'Data berhasil ditambahkan.');
         return redirect()->to('/komik');
     }
+    public function delete($id)
+    {
+        // Cek apakah data dengan ID tertentu ada
+        $komik = $this->komikModel->find($id);
+        if (!$komik) {
+            return redirect()->to('/komik')->with('error', 'Data tidak ditemukan');
+        }
+
+        // Hapus data dari database
+        $this->komikModel->delete($id);
+        session()->setFlashdata('pesan', 'Data berhasil dihapus.');
+        return redirect()->to('/komik')->with('success', 'Data berhasil dihapus');
+    }
+    public function edit($slug)
+    {
+        $data = [
+            'title' => 'Form Ubah Data Komik',
+            'validation' => session('validation'),
+            'komik' => $this->komikModel->getKomik($slug)
+        ];
+        return view('komik/edit', $data);
+    }
+    public function update($id)
+    {
+        // Cek judul
+        $komikLama = $this->komikModel->getKomik($this->request->getVar('slug'));
+        $rule_judul = ($komikLama['judul'] == $this->request->getVar('judul'))
+            ? 'required'
+            : 'required|is_unique[komik.judul]';
+
+        if (!$this->validate([
+            'judul' => [
+                'rules' => $rule_judul,
+                'errors' => [
+                    'required'   => '{field} komik harus diisi.',
+                    'is_unique'  => '{field} komik sudah terdaftar.'
+                ]
+            ]
+        ])) {
+            $validation = \Config\Services::validation();
+            return redirect()->to('/komik/edit/' . $this->request->getVar('slug'))->withInput()->with('validation', $validation);
+        }
+        $this->komikModel->save([
+            'id' => $id,
+            'judul' => $this->request->getVar('judul'),
+            'slug' => url_title($this->request->getVar('judul'), '-', true),
+            'penulis' => $this->request->getVar('penulis'),
+            'penerbit' => $this->request->getVar('penerbit'),
+            'sampul' => $this->request->getVar('sampul')
+        ]);
+
+        session()->setFlashdata('pesan', 'Data berhasil diubah.');
+        return redirect()->to('/komik');
+    }
 }
