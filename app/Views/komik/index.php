@@ -24,7 +24,7 @@
                     <?php foreach ($komik as $k) : ?>
                         <tr>
                             <th scope="row"><?= $k['id']; ?></th>
-                            <td><img src="<?= $k['sampul']; ?>" alt="sampul" class="sampul"></td>
+                            <td><img src="\img\<?= $k['sampul']; ?>" alt="sampul" class="sampul"></td>
                             <td><?= $k['judul']; ?></td>
                             <td>
                                 <a href="/komik/<?= $k['slug']; ?>" class="btn btn-success">Detail</a>
