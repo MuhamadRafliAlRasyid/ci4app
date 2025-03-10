@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use Kint\Value\FunctionValue;
+use Faker\Factory;
 
 class Pages extends BaseController
 {
